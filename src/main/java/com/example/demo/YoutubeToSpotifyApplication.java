@@ -9,5 +9,4 @@ public class YoutubeToSpotifyApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(YoutubeToSpotifyApplication.class, args);
 	}
-
 }
