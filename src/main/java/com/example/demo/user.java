@@ -8,7 +8,7 @@ import lombok.Setter;
 
 @NoArgsConstructor
 @Component
-public class user {
+public class User {
 
     @Getter @Setter
     private String authCode;

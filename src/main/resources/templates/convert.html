@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="mainBody">
+        <p>Enter the Youtube playlist URL</p>
+
+        <div id="playlistForm">
+            <form action="/processPlaylist" method="POST">
+                <label for="playlistID">Playlist ID</label>
+                <input type="text" id="playlistID" name="IDSelection">
+                <input type="submit" onclick="displayProcessing()" value="Convert playlist">
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function displayProcessing() {
+            var playlistForm = document.getElementById("playlistForm");
+            playlistForm.style.display = "none";
+            
+            var processingPage = document.createTextNode("Processing your request...");
+
+            var mainBody = document.getElementById("mainBody");
+            mainBody.appendChild(processingPage);
+        }
+    </script>
+</body>
+</html>

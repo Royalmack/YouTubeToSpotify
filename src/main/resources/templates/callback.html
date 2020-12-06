@@ -5,7 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
-<body>
+<body onload=redirect()>
     <p>This is the call back page</p>
+
+    <script>
+        function redirect() {
+            window.location.replace("http://localhost:8080/info");
+        }
+    </script>
 </body>
 </html>

@@ -1,75 +1,61 @@
 package com.example.demo.controllers;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
-import java.util.Map;
 
-import com.example.demo.spotifyHelper;
-import com.example.demo.user;
-import com.example.demo.helpers.parameterStringBuilder;
+import com.example.demo.User;
+import com.example.demo.entities.ResponseEntity;
+import com.example.demo.entities.UserInformation;
+import com.example.demo.helpers.SpotifyHelper;
+import com.example.demo.utility.HttpUtility;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
-public class mainController {
+public class MainController {
+
+    ObjectMapper objectMapper = new ObjectMapper();
+    UserInformation userInfo;
 
     @Autowired
-    spotifyHelper spotify;
+    SpotifyHelper spotify;
     @Autowired
-    user user;
+    User user;
 
     @GetMapping("/")
     public ModelAndView test() throws NoSuchAlgorithmException {
-        ModelAndView mv = new ModelAndView("test");
-        mv.addObject("spotifyURL", spotify.finalURL());
+        ModelAndView mv = new ModelAndView("home");
+        mv.addObject("spotifyURL", spotify.buildURL());
         return mv;
     }
 
     @GetMapping("/callback")
-    public ModelAndView callback(@RequestParam String code) throws IOException {
-        // Callback page where user processing will happen and then redirect to the conversion page
+    public RedirectView callback(@RequestParam String code) throws IOException {
+
         user.setAuthCode(code);
 
-        // Get access token
-        URL url = new URL("https://accounts.spotify.com/api/token");
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod("POST");
-        connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+        ResponseEntity response = HttpUtility.getAccessToken(spotify, user);
+        userInfo = HttpUtility.getUserInformation(response);
 
-        //Set body
-        Map<String, String> parameters = new HashMap<>();
-        parameters.put("client_id", spotify.getClientID());
-        parameters.put("grant_type", "authorization_code");
-        parameters.put("code", user.getAuthCode());
-        parameters.put("redirect_uri", spotify.getRedirectURI());
-        parameters.put("code_verifier", spotify.getVerifier());
+        return new RedirectView("http://localhost:8080/convert");
+    }
 
-        //create string out of parameters 
-        connection.setDoOutput(true);
-        DataOutputStream output = new DataOutputStream(connection.getOutputStream());
-        output.writeBytes(parameterStringBuilder.getParamsString(parameters));
-        output.flush();
-        output.close();
+    @GetMapping("/convert")
+    public ModelAndView userInfoPage() {
+        return new ModelAndView("convert");
+    }
 
-        BufferedReader input = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-
-        String inputLine;
-        StringBuffer content = new StringBuffer();
-        while ((inputLine = input.readLine()) != null) {
-            content.append(inputLine);
-        }
-        input.close();
-
-        return new ModelAndView("callback");
+    @PostMapping("/processPlaylist")
+    public ModelAndView processList(@RequestBody String playlistID) throws InterruptedException {
+        Thread.sleep(15000);
+        return new ModelAndView("completed");
     }
 }
