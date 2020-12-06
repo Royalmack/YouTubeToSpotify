@@ -21,5 +21,4 @@ public class ResponseEntity {
     public ResponseEntity() {
         //Lombok filling in the all args just need a default for linting
     }
-
 }

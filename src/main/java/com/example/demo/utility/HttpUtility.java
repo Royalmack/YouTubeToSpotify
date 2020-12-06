@@ -23,8 +23,7 @@ public final class HttpUtility {
     private static final String ME_ENDPOINT = "https://api.spotify.com/v1/me";
     private static ObjectMapper objectMapper = new ObjectMapper();
 
-    private HttpUtility() {
-    }
+    private HttpUtility() {}
 
     public static ResponseEntity getAccessToken(SpotifyHelper spotify, User user) throws IOException {
 
@@ -36,7 +35,6 @@ public final class HttpUtility {
         generateParamsAndBody(connection, spotify, user);
 
         String content = getResponseContent(connection);
-
         return objectMapper.readValue(content, ResponseEntity.class);
     }
 
@@ -48,9 +46,7 @@ public final class HttpUtility {
         setHeaders(connection, "GET", "Authorization", "Bearer "+ response.getAccess_token());
 
         String content = getResponseContent(connection);
-
         return objectMapper.readValue(content, UserInformation.class);
-
     }
 
     private static void setHeaders(HttpURLConnection connection, String method, String propKey, String propValue) throws ProtocolException {
@@ -89,7 +85,6 @@ public final class HttpUtility {
         }
 
         input.close();
-
         return content.toString();
     }
 }

@@ -20,7 +20,7 @@ public class UserInformation {
     private Map<String, String> external_urls;
     @Setter
     private Followers followers;
-     @Setter
+    @Setter
     private String href;
     @Getter @Setter
     private String id;

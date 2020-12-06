@@ -9,9 +9,7 @@ import org.apache.commons.codec.binary.Base64;
 
 public final class PCKEUtility {
 
-    private PCKEUtility() {
-        //Don't allow construction of class
-    }
+    private PCKEUtility() {}
 
     public static String generateVerifier() {
         SecureRandom sr = new SecureRandom();
